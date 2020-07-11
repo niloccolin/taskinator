@@ -13,34 +13,32 @@
     <body>
         
         <header>
-            <h1 class="page-title">Taskinator</h1>
+            <h1 class="page-title">Taskinator</h1> <!-- page-title -->
             <p>Click the button below to add a new task!</p>
-            <form id="task-form">
-                <div class="form-group">
-                    <input type="text" name="task-name" class="text-input" placeholder="Enter Task Name" />
-                    <select name="task-type" class="select-dropdown">
+
+            <form id="task-form"> <!-- task-form -->
+                <div class="form-group"> <!-- form-group -->
+                    <input type="text" name="task-name" class="text-input" placeholder="Enter Task Name" /> <!-- input...task-name -->
+                    <select name="task-type" class="select-dropdown"> <!-- task-type dropdown -->
                         <option value="" disabled selected>Pick a task type</option>
                         <option value="Print">Print</option>
                         <option value="Web">Web</option>
                         <option value="Mobile">Mobile</option>
                     </select>
-                    <button class="btn" id="save-task" type="submit">Add Task</button>
+                    <button class="btn" id="save-task" type="submit">Add Task</button> <!-- save-task button -->
                 </div>
             </form>
+
         </header>
 
 
         <main>
 
-            <section class="task-list-wrapper">
+            <section class="task-list-wrapper"> <!-- task list section -->
 
                 <h2>Tasks To Do</h2>
-                <ul class="task-list" id="tasks-to-do">
-
+                <ul class="task-list" id="tasks-to-do"> <!-- to do list ul element -->
                     <li class="task-item">A task is going to be added soon!</li>
-
-                    
-
                 </ul>
 
             </section>
@@ -48,9 +46,7 @@
         </main>
 
 
-        <footer>
-            &copy;2020 by Taskinator
-        </footer>
+        <footer>&copy;2020 by Taskinator</footer>
 
 
         <script src="assets/js/script.js"></script>

@@ -2,6 +2,7 @@
 <html lang="en">
 
     <head>
+        
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -13,6 +14,7 @@
     <body>
         
         <header>
+
             <!-- page-title -->
             <h1 class="page-title">Taskinator</h1>
             <p>Click the button below to add a new task!</p>
@@ -45,11 +47,11 @@
         </header>
 
 
-        <main id="page-content">
+        <main class="page-content" id="page-content">
 
             <!-- tasks to do section -->
             <section class="task-list-wrapper"> 
-                <h2>Tasks To Do</h2>
+                <h2 class="list-title">Tasks To Do</h2>
                 <ul class="task-list" id="tasks-to-do"></ul>
             </section>
 
@@ -60,15 +62,13 @@
             </section>
 
             <!-- tasks completed -->
-            <section>
+            <section class="task-list-wrapper">
                 <h2 class="list-title">Tasks Completed</h2>
                 <ul class="task-list" id="tasks-completed"></ul>
             </section>
         </main>
 
-
         <footer>&copy;2020 by Taskinator</footer>
-
 
         <script src="assets/js/script.js"></script>
     </body>

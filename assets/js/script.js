@@ -1,6 +1,32 @@
-var pageContentEl = document.querySelector("#page-content");
-// taskId -> data-task-id -> taskIdCounter
+// Index
+// ______
+//
+// taskDataObj - if/else statement inside of the taskFormHandler function.
+//
+
+
+// Pseudocode/Code-Decryption
+// __________________________
+//  -----------------------
+//
+//  formEl {
+//      "formEl" is defined at the top of the script. It is a variable with a selector, querySelector(). It selects the HTML <form> element via its ID
+//      "#task-form".
+//      ... A submit event listener is then attached to "formEl". This is located between the createTaskActions function and the editTasks function.
+//      ... The default legacy "auto-refresh" behavior of the submit event is then prevented, via the preventDefault() method, used in 
+//      the "taskFormHandler" event-handling function.
+//  }
+//  {
+//      taskId -> data-task-id -> taskIdCounter
+//  }
+
+
+
+var tasks = [];
 var taskIdCounter = 0;
+
+// DOM element variables
+var pageContentEl = document.querySelector("#page-content");
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 var tasksInProgressEl = document.querySelector("#tasks-in-progress");
@@ -12,9 +38,9 @@ var taskFormHandler = function(event) {
     // prevents page from refreshing upon submitting form input
     event.preventDefault();
 
-    // select value of task name
+    // set name value
     var taskNameInput = document.querySelector("input[name='task-name']").value;
-    // select value of task type
+    // set type value
     var taskTypeInput = document.querySelector("select[name='task-type']").value;
 
     // check if input values are empty strings
@@ -26,21 +52,23 @@ var taskFormHandler = function(event) {
     // reset task input field
     formEl.reset();
 
-    // checks to see if task form has data attribute "data-task-id", thus checking if it's editing a task
+    // checks to see if task form has data attribute "data-task-id", thus checking if the form is editing a task
     var isEdit = formEl.hasAttribute("data-task-id");
 
-    // has data attribute, so get task id and call function to complete edit process
+    // if formEl carries data attribute, get task id, and call function used to complete edit process
     if (isEdit) {
         var taskId = formEl.getAttribute("data-task-id");
         completeEditTask(taskNameInput, taskTypeInput, taskId);
     }
-    // no data attribute, so create object as normal and pass to createTaskEl function
+    // if no data attribute, then create a new object. then, pass to createTaskEl function.
     else {
         var taskDataObj = {
             name: taskNameInput,
-            type: taskTypeInput
+            type: taskTypeInput,
+            status: "to do"
         };
 
+        // initiate createTaskEl, sending taskDataObj as an argument to createTaskEl.
         createTaskEl(taskDataObj);
     }
 
@@ -57,6 +85,14 @@ var completeEditTask = function(taskName, taskType, taskId) {
     taskSelected.querySelector("h3.task-name").textContent = taskName;
     taskSelected.querySelector("span.task-type").textContent = taskType;
 
+    // loop through tasks array and task object with new content
+    for (var i = 0; i < tasks.length; i++) {
+        if (tasks[i].id === parseInt(taskId)) {
+            tasks[i].name = taskName;
+            tasks[i].type = taskType;
+        }
+    }
+
     alert("Task Updated!");
 
     formEl.removeAttribute("data-task-id");
@@ -66,13 +102,15 @@ var completeEditTask = function(taskName, taskType, taskId) {
 // task object-creating
 var createTaskEl = function(taskDataObj) {
     
+    console.log(taskDataObj);
+    console.log(taskDataObj.status);
+
     // create list item
+    // first step done of this assignment
     var listItemEl = document.createElement("li");
     listItemEl.className = "task-item";
 
-    // ***IMPORTANT
-    // the custom data attribute (data-*) data-task-id is set to the value of taskIdCounter.
-    // ***
+    // the custom data attribute (format: ⭐data-attribute-name⭐ ... the attribute value can be any string [no caps].) data-task-id is set to the value of taskIdCounter.
     listItemEl.setAttribute("data-task-id", taskIdCounter);
 
     // make task item draggable
@@ -84,10 +122,15 @@ var createTaskEl = function(taskDataObj) {
     taskInfoEl.innerHTML = "<h3 class='task-name'>" + taskDataObj.name + "</h3><span class='task-type'>" + taskDataObj.type + "</span>";
     listItemEl.appendChild(taskInfoEl);
 
+    taskDataObj.id = taskIdCounter;
+
+    tasks.push(taskDataObj);
+
     var taskActionsEl = createTaskActions(taskIdCounter);
     listItemEl.appendChild(taskActionsEl);
 
     // add entire list item to list
+    // second step done of this assignment
     tasksToDoEl.appendChild(listItemEl);
 
     // increment task counter for next unique id
@@ -215,6 +258,15 @@ var taskStatusChangeHandler = function(event) {
     else if (statusValue === "completed") {
         tasksCompletedEl.appendChild(taskSelected);
     }
+
+    // update tasks in tasks array
+    for (var i = 0; i < tasks.length; i++) {
+        if (Tasks[i].id === parseInt(taskId)) {
+            tasks[i].status = statusValue;
+        }
+    }
+
+    console.log(tasks);
 };
 
 var dragTaskHandler = function(event) {
@@ -243,7 +295,7 @@ var dropZoneDragHandler = function(event) {
 
 var dropTaskHandler = function(event) {
 
-    var id = event.dataTransfer.getData("text-plain");
+    var id = event.dataTransfer.getData("text/plain");
 
     var draggableElement = document.querySelector("[data-task-id='" + id + "']");
 
@@ -251,7 +303,7 @@ var dropTaskHandler = function(event) {
     var statusType = dropZoneEl.id;
 
     // set status of task based on dropZone id
-    var statusSelectEl = draggableElement.querySelector("select[name='status-change'])");
+    var statusSelectEl = draggableElement.querySelector("select[name='status-change']");
     if (statusType === "tasks-to-do") {
         statusSelectEl.selectedIndex = 0;
     }
@@ -265,6 +317,15 @@ var dropTaskHandler = function(event) {
     dropZoneEl.removeAttribute("style");
 
     dropZoneEl.appendChild(draggableElement);
+
+    // loop through tasks array to find and update the updated task's status
+    for (var i = 0; i < tasks.length; i++) {
+        if (tasks[i].id === parseInt(id)) {
+            tasks[i].status = statusSelectEl.value.toLowerCase();
+        }
+    }
+
+    console.log(tasks);
 };
 
 var dragLeaveHandler = function(event) {
@@ -275,7 +336,7 @@ var dragLeaveHandler = function(event) {
     }
 }
 
-pageContentEl.addEventListener("click", taskButtonHandler);
+// pageContentEl.addEventListener("click", taskButtonHandler);
 
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
 
